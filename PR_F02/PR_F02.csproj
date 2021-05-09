@@ -4,5 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\lara\Documents\UPB\Semestre 5\CERTIFICACION_1\GIT\PROYECTO_F02\PR_F02\PR_F02.xml</DocumentationFile>
+  </PropertyGroup>
+
 
 </Project>
