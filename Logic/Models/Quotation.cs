@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace UPB.FinalProject.Data.Models
+namespace UPB.FinalProject.Logic.Models
 {
     public class Quotation
     {

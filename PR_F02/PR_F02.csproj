@@ -10,5 +10,11 @@
     <DocumentationFile>C:\Users\lara\Documents\UPB\Semestre 5\CERTIFICACION_1\GIT\PROYECTO_F02\PR_F02\PR_F02.xml</DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.1.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.1.4" />
+  </ItemGroup>
+
 
 </Project>
