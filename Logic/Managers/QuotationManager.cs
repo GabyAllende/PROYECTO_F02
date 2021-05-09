@@ -3,15 +3,26 @@ using System.Collections.Generic;
 using System.Text;
 using UPB.FinalProject.Logic.Models;
 using UPB.FinalProject.Data;
+using UPB.FinalProject.Services;
+using UPB.FinalProject.Services.Models;
 
 namespace UPB.FinalProject.Logic.Managers
 {
     public class QuotationManager : IQuotationManager
     {
         private IDbContext _dbContext;
-        public QuotationManager(IDbContext dbContext)
+
+        private readonly IPriceBookService _priceBookService;
+
+        public List<Price> GetAllPrices() 
+        {
+            return _priceBookService.GetAllPrices().Result;
+        }
+
+        public QuotationManager(IDbContext dbContext, IPriceBookService priceBookService)
         {
             _dbContext = dbContext;
+            _priceBookService = priceBookService;
         }
         public Quotation CreateQuotation(Quotation quo)
         {
@@ -28,6 +39,27 @@ namespace UPB.FinalProject.Logic.Managers
         public List<Quotation> GetAllQuotations()
         {
             List<Data.Models.Quotation> quo = _dbContext.GetAllQuotations();
+            List<Price> myPriceBook = _priceBookService.GetAllPrices().Result;
+
+            foreach (var prod in quo) 
+            {
+                Price precioProd = myPriceBook.Find(pr => pr.CodProd == prod.CodProd);
+                double miPrecio = 0;
+                if (precioProd != null ) 
+                {
+                    if (precioProd.PromotionPrice == 0)
+                    {
+                        miPrecio = precioProd.SetPrice;
+                    }
+                    else
+                    {
+                        miPrecio = precioProd.PromotionPrice;
+                    }
+                }
+                
+                prod.Price = miPrecio;
+            }
+
             return DTOMappers.MapQuotations(quo);
         }
 

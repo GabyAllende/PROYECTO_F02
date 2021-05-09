@@ -11,7 +11,7 @@ namespace UPB.FinalProject.Data
 
         public List<Quotation> QuotationTable { get; set; }
 
-        string[] cat = { "SOCCER", "TENNIS", "BASQUETBALL", "RUGBY", "TABLE-TENNIS" };
+        string[] cat = { "SOCCER",  "BASKET" };
         public DbContext() 
         {
             QuotationTable = new List<Quotation>();
@@ -30,12 +30,12 @@ namespace UPB.FinalProject.Data
                 QuotationTable.Add(new Quotation()
                 {
                     
-                    CodProd = cat[r.Next(0, 5)]+"-"+med,
+                    CodProd = cat[r.Next(0, 2)]+"-"+med,
                     CodClient = "MTR-"+med2,
                    // Id = uniqueId(cont)
                    Sale = false,
                    Stock = r.Next(0,51),
-                   Price = r.NextDouble()*100
+                   //Price = r.NextDouble()*100
 
                 });
             }

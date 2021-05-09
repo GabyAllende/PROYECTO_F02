@@ -15,6 +15,7 @@ using UPB.FinalProject.Data;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.IO;
+using UPB.FinalProject.Services;
 
 namespace PR_F02
 {
@@ -37,9 +38,12 @@ namespace PR_F02
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+
+            services.AddTransient<IPriceBookService, PriceBookService>();
             services.AddTransient<IQuotationManager, QuotationManager>();
             services.AddSingleton<IDbContext, DbContext>();
+
+            services.AddControllers();
 
             services.AddSwaggerGen(p =>
             {
