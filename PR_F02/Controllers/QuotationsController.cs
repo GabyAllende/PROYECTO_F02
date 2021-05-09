@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using UPB.FinalProject.Logic.Models;
+using UPB.FinalProject.Logic.Managers;
 
 namespace PR_F02.Controllers
 {
@@ -11,29 +14,38 @@ namespace PR_F02.Controllers
     [Route("/api/quotations")]
     public class QuotationsController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
+        private static IConfiguration _config;
+        private readonly IQuotationManager _quotationManager; 
         private readonly ILogger<QuotationsController> _logger;
 
-        public QuotationsController(ILogger<QuotationsController> logger)
+        public QuotationsController(IConfiguration config,IQuotationManager quotationManager)
+
         {
-            _logger = logger;
+            _config = config;
+            _quotationManager = quotationManager;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public List<Quotation> GetGroup()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            return _quotationManager.GetAllQuotations();
+        }
+
+        [HttpPost]
+        public Quotation CreateGroup([FromBody] Quotation quo)//, [FromBody] string studentLastName ) 
+        {
+            return _quotationManager.CreateQuotation(quo);
+        }
+        [HttpPut]
+        public Quotation UpdateGroup([FromBody] Quotation quo)
+        {
+            return _quotationManager.UpdateQuotation(quo);
+        }
+
+        [HttpDelete]
+        public Quotation DeleteGroup([FromBody] Quotation quo)
+        {
+            return _quotationManager.DeleteQuotation(quo);
         }
     }
 }

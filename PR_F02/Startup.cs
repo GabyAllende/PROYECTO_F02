@@ -10,22 +10,45 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using UPB.FinalProject.Logic.Managers;
+using UPB.FinalProject.Data;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
+using System.IO;
 
 namespace PR_F02
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+
+        private IConfiguration Configuration { get; }
+        public Startup(Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json")
+                .AddEnvironmentVariables();
+            Configuration = builder.Build();
         }
 
-        public IConfiguration Configuration { get; }
+       
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddTransient<IQuotationManager, QuotationManager>();
+            services.AddSingleton<IDbContext, DbContext>();
+
+            services.AddSwaggerGen(p =>
+            {
+                p.SwaggerDoc("v3", new OpenApiInfo { Title = "Practice WebAPI", Version = "v3" });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                p.IncludeXmlComments(xmlPath);
+
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +64,13 @@ namespace PR_F02
             app.UseRouting();
 
             app.UseAuthorization();
+            
+            app.UseSwagger();
+
+            app.UseSwaggerUI(p =>
+            {
+                p.SwaggerEndpoint("/swagger/v3/swagger.json", "Final Project");
+            });
 
             app.UseEndpoints(endpoints =>
             {
