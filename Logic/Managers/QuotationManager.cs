@@ -41,11 +41,18 @@ namespace UPB.FinalProject.Logic.Managers
             List<Data.Models.Quotation> quo = _dbContext.GetAllQuotations();
             List<Price> myPriceBook = _priceBookService.GetAllPrices().Result;
 
+            Console.Out.WriteLine("=================LISTA DE PRECIOS: ====================");
+            foreach (var p in myPriceBook) 
+            {
+                Console.WriteLine($"Precio CodProd: {p.CodProd} SetPrice: {p.SetPrice} PromotionPrice: {p.PromotionPrice}");
+            }
+
+            Console.Out.WriteLine("==================LISTA DE COTIZACIONES===================");
             foreach (var prod in quo) 
             {
                 Price precioProd = myPriceBook.Find(pr => pr.CodProd == prod.CodProd);
                 double miPrecio = 0;
-                if (precioProd != null ) 
+                if (precioProd != null)
                 {
                     if (precioProd.PromotionPrice == 0)
                     {
@@ -56,8 +63,13 @@ namespace UPB.FinalProject.Logic.Managers
                         miPrecio = precioProd.PromotionPrice;
                     }
                 }
+                else 
+                {
+                    Console.WriteLine($"NO SE ENCONTRO EL CODIGO: {prod.CodProd}");
+                }
                 
                 prod.Price = miPrecio;
+                Console.Out.WriteLine($"CodProd: {prod.CodProd} CodCliente: {prod.CodClient} Price: {prod.Price}");
             }
 
             return DTOMappers.MapQuotations(quo);
